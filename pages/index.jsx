@@ -1,8 +1,8 @@
 export default function Home() {
   return (
     <main>
-      <h1>Calíope me deixa dormir! 🐈</h1>
-      <p>Hoje, ela deixou eu dormir</p>
+      <h1>Calíope e Karin (meus queridos gatinhos) me deixem dormir! 🐈😼</h1>
+      <p>Preciso dormir bem para ter um bom dia para ter uma vida "melhor"</p>
     </main>
   );
 }
