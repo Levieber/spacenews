@@ -4,9 +4,6 @@
   "description": "An tabnews clone",
   "main": "index.js",
   "packageManager": "npm@10.8.1",
-  "engines": {
-    "node": "v20.14.0"
-  },
   "scripts": {
     "dev": "next dev",
     "lint": "prettier --check .",
