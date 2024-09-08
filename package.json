@@ -5,7 +5,7 @@
   "main": "index.js",
   "packageManager": "npm@10.8.1",
   "scripts": {
-    "predev": "npm run services:up",
+    "predev": "npm run services:up && npm run wait-for-postgres && npm run migration:up",
     "dev": "next dev",
     "services:up": "docker compose -f infra/compose.yaml up -d",
     "services:stop": "docker compose -f infra/compose.yaml stop",
@@ -15,7 +15,8 @@
     "test": "jest --runInBand",
     "test:watch": "jest --watch --runInBand",
     "migration:create": "node-pg-migrate -m infra/migrations create",
-    "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up"
+    "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
+    "wait-for-postgres": "node infra/scripts/wait-for-postgres.js"
   },
   "repository": {
     "type": "git",
