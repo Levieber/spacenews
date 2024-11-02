@@ -4,5 +4,8 @@
   "cSpell.words": ["commitlint", "github", "secretlint"],
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
