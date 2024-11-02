@@ -10,7 +10,7 @@
     "pretest": "npm run services:up",
     "test": "concurrently -n next,jest --hide next -k -s command-jest \"npm:dev\" \"jest --runInBand --verbose\"",
     "posttest": "npm run services:down",
-    "test:watch": "jest --watch --runInBand",
+    "test:watch": "jest --watch --runInBand --verbose",
     "services:up": "docker compose -f infra/compose.yaml up -d",
     "services:stop": "docker compose -f infra/compose.yaml stop",
     "services:down": "docker compose -f infra/compose.yaml down",
