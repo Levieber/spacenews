@@ -5,11 +5,12 @@
   "main": "index.js",
   "packageManager": "npm@10.9.0",
   "scripts": {
-    "predev": "npm run services:up && npm run wait-for-postgres && npm run migration:up",
+    "predev": "npm run services:up && npm run services:wait:database && npm run migration:up",
     "dev": "next dev --turbopack",
     "services:up": "docker compose -f infra/compose.yaml up -d",
     "services:stop": "docker compose -f infra/compose.yaml stop",
     "services:down": "docker compose -f infra/compose.yaml down",
+    "services:wait:database": "node infra/scripts/wait-for-postgres.js",
     "lint:format:check": "prettier --check .",
     "lint:format:write": "prettier --write .",
     "lint:quality:check": "next lint --dir .",
@@ -18,7 +19,6 @@
     "test:watch": "jest --watch --runInBand",
     "migration:create": "node-pg-migrate -m infra/migrations create",
     "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
-    "wait-for-postgres": "node infra/scripts/wait-for-postgres.js",
     "prepare": "husky",
     "commit": "cz"
   },
