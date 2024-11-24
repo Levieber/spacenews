@@ -6,7 +6,7 @@
   "packageManager": "npm@10.9.0",
   "scripts": {
     "predev": "npm run services:up && npm run services:wait:database && npm run migrations:up",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "pretest": "npm run services:up",
     "test": "concurrently -n next,jest --hide next -k -s command-jest \"npm:dev\" \"jest --runInBand --verbose\"",
     "posttest": "npm run services:down",
@@ -37,11 +37,12 @@
     "async-retry": "1.3.3",
     "dotenv": "16.4.5",
     "dotenv-expand": "11.0.6",
-    "next": "15.0.2",
+    "next": "14.2.18",
     "node-pg-migrate": "7.7.1",
     "pg": "8.13.1",
-    "react": "19.0.0-rc-02c0e824-20241028",
-    "react-dom": "19.0.0-rc-02c0e824-20241028"
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "swr": "2.2.5"
   },
   "devDependencies": {
     "@commitlint/cli": "19.5.0",
@@ -51,7 +52,7 @@
     "commitizen": "4.3.1",
     "concurrently": "9.0.1",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "9.14.0",
+    "eslint": "8.57.1",
     "eslint-config-next": "15.0.2",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-jest": "28.8.3",
