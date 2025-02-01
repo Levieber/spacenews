@@ -1,50 +1,57 @@
 import path from "node:path";
+import { createRouter } from "next-connect";
 import migrationRunner from "node-pg-migrate";
 import database from "infra/database";
+import controllers from "infra/controllers";
 
-async function migrations(request, response) {
-  if (request.method !== "GET" && request.method !== "POST") {
-    return response.status(405).json({
-      error: `Method "${request.method}" not allowed`,
-    });
-  }
+const router = createRouter();
 
+router.get(getHandler);
+router.post(postHandler);
+
+export default router.handler(controllers.errorHandlers);
+
+const defaultMigrationOptions = {
+  dir: path.resolve("infra", "migrations"),
+  direction: "up",
+  dryRun: true,
+  verbose: true,
+  migrationsTable: "pgmigrations",
+};
+
+async function getHandler(request, response) {
   let dbClient;
 
   try {
     dbClient = await database.getNewClient();
 
-    const defaultMigrationOptions = {
+    const pendingMigrations = await migrationRunner({
+      ...defaultMigrationOptions,
       dbClient,
-      dir: path.resolve("infra", "migrations"),
-      direction: "up",
-      dryRun: true,
-      verbose: true,
-      migrationsTable: "pgmigrations",
-    };
+    });
 
-    if (request.method === "GET") {
-      const pendingMigrations = await migrationRunner(defaultMigrationOptions);
-
-      return response.status(200).json(pendingMigrations);
-    }
-
-    if (request.method === "POST") {
-      const migratedMigrations = await migrationRunner({
-        ...defaultMigrationOptions,
-        dryRun: false,
-      });
-
-      return response
-        .status(migratedMigrations.length > 0 ? 201 : 200)
-        .json(migratedMigrations);
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
+    return response.status(200).json(pendingMigrations);
   } finally {
-    await dbClient.end();
+    await dbClient?.end();
   }
 }
 
-export default migrations;
+async function postHandler(request, response) {
+  let dbClient;
+
+  try {
+    dbClient = await database.getNewClient();
+
+    const migratedMigrations = await migrationRunner({
+      ...defaultMigrationOptions,
+      dbClient,
+      dryRun: false,
+    });
+
+    return response
+      .status(migratedMigrations.length > 0 ? 201 : 200)
+      .json(migratedMigrations);
+  } finally {
+    await dbClient?.end();
+  }
+}
