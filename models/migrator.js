@@ -7,7 +7,7 @@ const defaultMigrationOptions = {
   dir: path.resolve("infra", "migrations"),
   direction: "up",
   dryRun: true,
-  verbose: true,
+  log: () => {},
   migrationsTable: "pgmigrations",
 };
 
