@@ -18,6 +18,8 @@ function getNumberOfRounds() {
 const PEPPER = process.env.PEPPER || "JALAPEÑO";
 
 function addPepper(password) {
+  if (!password) return undefined;
+
   const halfLength = Math.ceil(PEPPER.length / 2);
   const pepperStart = PEPPER.slice(0, halfLength);
   const pepperEnd = PEPPER.slice(halfLength);
