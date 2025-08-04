@@ -10,5 +10,14 @@ export default defineConfig({
     globals: true,
     isolate: false,
     fileParallelism: false,
+    forceRerunTriggers: [
+      "**/package.json/**",
+      "**/vitest.config.*/**",
+      "**/vite.config.*/**",
+      "**/jsconfig.json/**",
+      "**/pages/**/*",
+      "**/models/**/*",
+      "**/infra/**/*",
+    ],
   },
 });
