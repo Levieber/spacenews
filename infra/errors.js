@@ -1,5 +1,5 @@
 export class InternalServerError extends Error {
-  constructor({ cause, statusCode }) {
+  constructor({ cause, statusCode } = {}) {
     super("Um erro interno inesperado ocorreu.", { cause });
     this.name = "InternalServerError";
     this.action = "Entre em contato com o suporte.";
@@ -36,7 +36,7 @@ export class MethodNotAllowedError extends Error {
 }
 
 export class ServiceError extends Error {
-  constructor({ message, cause }) {
+  constructor({ message, cause } = {}) {
     super(message || "Serviço indisponível no momento.", { cause });
     this.name = "ServiceError";
     this.action = "Verifique se o serviço está disponível.";
@@ -54,7 +54,7 @@ export class ServiceError extends Error {
 }
 
 export class ValidationError extends Error {
-  constructor({ message, cause, action }) {
+  constructor({ message, cause, action } = {}) {
     super(message || "Um erro de validação ocorreu.", { cause });
     this.name = "ValidationError";
     this.action = action || "Ajuste os dados enviados e tente novamente.";
@@ -72,7 +72,7 @@ export class ValidationError extends Error {
 }
 
 export class NotFoundError extends Error {
-  constructor({ message, cause, action }) {
+  constructor({ message, cause, action } = {}) {
     super(message || "Não foi possível encontrar este recurso no sistema.", {
       cause,
     });
@@ -94,7 +94,7 @@ export class NotFoundError extends Error {
 }
 
 export class UnauthorizedError extends Error {
-  constructor({ message, cause, action }) {
+  constructor({ message, cause, action } = {}) {
     super(message || "Usuário não autenticado.", {
       cause,
     });
