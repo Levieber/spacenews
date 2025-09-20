@@ -2,6 +2,7 @@
   "name": "spacenews",
   "version": "1.0.0",
   "description": "An tabnews clone",
+  "type": "module",
   "scripts": {
     "predev": "npm run services:up && npm run services:wait:database && npm run migrations:up",
     "dev": "next dev --turbopack",
