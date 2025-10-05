@@ -1,9 +1,9 @@
 import retry from "async-retry";
 import { Faker, pt_BR } from "@faker-js/faker";
-import database from "infra/database.js";
-import migrator from "models/migrator.js";
-import user from "models/user.js";
-import session from "models/session.js";
+import database from "@infra/database.js";
+import migrator from "@models/migrator.js";
+import user from "@models/user.js";
+import session from "@models/session.js";
 
 async function waitForAllServices() {
   await waitForWebServer();

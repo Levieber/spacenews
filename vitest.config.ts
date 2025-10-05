@@ -1,7 +1,8 @@
-import dotenv from "dotenv";
 import { defineConfig } from "vitest/config";
 
-const env = dotenv.config({ path: ".env.development", quiet: true }).parsed;
+process.loadEnvFile(".env.development");
+
+const env = process.env;
 
 export default defineConfig({
   test: {
@@ -10,14 +11,41 @@ export default defineConfig({
     globals: true,
     isolate: false,
     fileParallelism: false,
-    forceRerunTriggers: [
-      "**/package.json/**",
-      "**/vitest.config.*/**",
-      "**/vite.config.*/**",
-      "**/jsconfig.json/**",
-      "**/pages/**/*",
-      "**/models/**/*",
-      "**/infra/**/*",
+    watchTriggerPatterns: [
+      {
+        pattern: /pages\/api\/v1\/(.*)\/index.js/,
+        testsToRun: toRunApiTests,
+      },
+    ],
+  },
+  resolve: {
+    alias: [
+      {
+        find: "@models",
+        replacement: new URL("./models", import.meta.url).pathname,
+      },
+      {
+        find: "@infra",
+        replacement: new URL("./infra", import.meta.url).pathname,
+      },
+      {
+        find: "@tests",
+        replacement: new URL("./tests", import.meta.url).pathname,
+      },
     ],
   },
 });
+
+function toRunApiTests(
+  _id: string,
+  match: RegExpMatchArray,
+): string[] | string | null | undefined | void {
+  const baseUrl = `tests/integration/api/v1/${match[1]}`;
+
+  return [
+    `${baseUrl}/get.test.js`,
+    `${baseUrl}/post.test.js`,
+    `${baseUrl}/put.test.js`,
+    `${baseUrl}/delete.test.js`,
+  ];
+}

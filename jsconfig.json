@@ -1,6 +1,13 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "paths": {
+      "@models/*": ["./models/*"],
+      "@infra/*": ["./infra/*"],
+      "@tests/*": ["./tests/*"]
+    },
     "types": ["vitest/globals"]
   }
 }

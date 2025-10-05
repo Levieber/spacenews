@@ -5,8 +5,8 @@ import {
   ValidationError,
   NotFoundError,
   UnauthorizedError,
-} from "infra/errors.js";
-import session from "models/session.js";
+} from "@infra/errors.js";
+import session from "@models/session.js";
 
 function onNoMatchHandler(_request, response) {
   const publicError = new MethodNotAllowedError();

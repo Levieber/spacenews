@@ -1,6 +1,6 @@
 import setCookieParser from "set-cookie-parser";
-import orchestrator from "tests/orchestrator.js";
-import session from "models/session.js";
+import orchestrator from "@tests/orchestrator.js";
+import session from "@models/session.js";
 
 describe("DELETE /api/v1/sessions", () => {
   describe("Default user", () => {
