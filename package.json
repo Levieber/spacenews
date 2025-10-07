@@ -50,14 +50,14 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "swr": "2.3.6",
-    "uuid": "11.1.0"
+    "uuid": "13.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.8.1",
-    "@commitlint/config-conventional": "19.8.1",
-    "@faker-js/faker": "9.9.0",
+    "@commitlint/cli": "20.1.0",
+    "@commitlint/config-conventional": "20.0.0",
+    "@faker-js/faker": "10.0.0",
     "@prettier/plugin-oxc": "0.0.4",
-    "@secretlint/secretlint-rule-preset-recommend": "10.2.1",
+    "@secretlint/secretlint-rule-preset-recommend": "11.2.4",
     "commitizen": "4.3.1",
     "concurrently": "9.2.1",
     "cz-conventional-changelog": "3.3.0",
@@ -65,7 +65,7 @@
     "knip": "5.64.2",
     "oxlint": "1.20.0",
     "prettier": "3.6.2",
-    "secretlint": "10.2.1",
+    "secretlint": "11.2.4",
     "set-cookie-parser": "2.7.1",
     "vitest": "3.2.4"
   },
