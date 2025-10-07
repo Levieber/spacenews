@@ -2,7 +2,6 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "cSpell.words": ["commitlint", "github", "secretlint"],
-  "eslint.useFlatConfig": true,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

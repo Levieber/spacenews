@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
-import database from "infra/database.js";
-import { UnauthorizedError } from "infra/errors.js";
+import database from "@infra/database.js";
+import { UnauthorizedError } from "@infra/errors.js";
 
 const EXPIRATION_IN_MILLISECONDS = 60 * 60 * 24 * 30 * 1000; // 30 days
 

@@ -1,1 +1,1 @@
-secretlint "**/*"
+npm run lint:secret:check
