@@ -1,4 +1,5 @@
-import orchestrator from "tests/orchestrator.js";
+import activation from "@models/activation.js";
+import orchestrator from "@tests/orchestrator.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -8,6 +9,8 @@ beforeAll(async () => {
 });
 
 describe("Use case: Registration Flow (all successful)", () => {
+  let createUserResponseBody;
+
   test("Create user account", async () => {
     const expectedUsername = "RegistrationFlow";
     const expectedEmail = "registration.flow@gmail.com";
@@ -27,7 +30,7 @@ describe("Use case: Registration Flow (all successful)", () => {
       },
     );
 
-    const createUserResponseBody = await createUserResponse.json();
+    createUserResponseBody = await createUserResponse.json();
 
     expect(createUserResponse.status).toBe(201);
     expect(createUserResponseBody).toEqual({
@@ -41,7 +44,19 @@ describe("Use case: Registration Flow (all successful)", () => {
     });
   });
 
-  test("Receive activation email", async () => {});
+  test("Receive activation email", async () => {
+    const lastEmail = await orchestrator.getLastEmail();
+
+    const activationToken = await activation.findOneByUserId(
+      createUserResponseBody.id,
+    );
+
+    expect(lastEmail.sender).toBe("<contato@spacenews.com.br>");
+    expect(lastEmail.recipients[0]).toBe("<registration.flow@gmail.com>");
+    expect(lastEmail.subject).toBe("Ative seu cadastro no SpaceNews!");
+    expect(lastEmail.text).toContain("RegistrationFlow");
+    expect(lastEmail.text).toContain(activationToken.id);
+  });
 
   test("Activate account", async () => {});
 
