@@ -84,6 +84,8 @@ async function getLastEmail() {
 
   const lastEmail = emailBody.at(-1);
 
+  if (!lastEmail) return null;
+
   const emailTextResponse = await fetch(
     `${process.env.EMAIL_HTTP_URL}/messages/${lastEmail.id}.plain`,
   );
