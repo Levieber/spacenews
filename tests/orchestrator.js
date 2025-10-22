@@ -4,6 +4,7 @@ import database from "@infra/database.js";
 import migrator from "@models/migrator.js";
 import user from "@models/user.js";
 import session from "@models/session.js";
+import activation from "@models/activation.js";
 
 async function waitForAllServices() {
   await waitForWebServer();
@@ -98,6 +99,14 @@ async function getLastEmail() {
   };
 }
 
+function extractActivationTokenId(text) {
+  const [activationTokenId] = text.match(
+    activation.ACTIVATION_TOKEN_ID_PATTERN,
+  );
+
+  return activationTokenId;
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -106,6 +115,7 @@ const orchestrator = {
   createSession,
   deleteAllEmails,
   getLastEmail,
+  extractActivationTokenId,
 };
 
 export default orchestrator;
