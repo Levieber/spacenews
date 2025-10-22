@@ -1,10 +1,14 @@
 import database from "@infra/database.js";
 import email from "@infra/email.js";
 import webServer from "@infra/web-server.js";
+import { NotFoundError } from "@infra/errors.js";
+
+const ACTIVATION_TOKEN_ID_PATTERN =
+  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
 const EXPIRATION_IN_MILLISECONDS = 60 * 15 * 1000; // 15 minutes
 
-async function findOneByUserId(userId) {
+async function findOneValidById(userId) {
   const savedToken = await runSelectQuery(userId);
   return savedToken;
 
@@ -16,12 +20,24 @@ async function findOneByUserId(userId) {
         FROM
           user_activation_tokens
         WHERE
-          user_id = $1
+          id = $1
+        AND
+          used_at IS NULL
+        AND
+          expires_at > NOW()
         LIMIT
           1
       ;`,
       values: [userId],
     });
+
+    if (result.rowCount === 0) {
+      throw new NotFoundError({
+        action:
+          "Verifique se o token de ativação ainda é válido ou se foi informado corretamente.",
+        message: "Usuário não possui token de ativação válido.",
+      });
+    }
 
     return result.rows[0];
   }
@@ -70,9 +86,10 @@ Equipe SpaceNews`,
 }
 
 const activation = {
-  findOneByUserId,
+  findOneValidById,
   create,
   sendEmailToUser,
+  ACTIVATION_TOKEN_ID_PATTERN,
 };
 
 export default activation;
