@@ -1,7 +1,8 @@
+import { NotFoundError } from "@infra/errors.js";
 import database from "@infra/database.js";
 import email from "@infra/email.js";
 import webServer from "@infra/web-server.js";
-import { NotFoundError } from "@infra/errors.js";
+import user from "@models/user.js";
 
 const ACTIVATION_TOKEN_ID_PATTERN =
   /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
@@ -71,6 +72,35 @@ async function create(userId) {
   }
 }
 
+async function markTokenAsUsed(activationTokenId) {
+  const activationToken = await runUpdateQuery(activationTokenId);
+  return activationToken;
+
+  async function runUpdateQuery(activationTokenId) {
+    const result = await database.query({
+      text: `
+        UPDATE
+          user_activation_tokens
+        SET
+          used_at = timezone('utc', now()),
+          updated_at = timezone('utc', now())
+        WHERE
+          id = $1
+        RETURNING
+          *
+      ;`,
+      values: [activationTokenId],
+    });
+
+    return result.rows[0];
+  }
+}
+
+async function activateUserByUserId(userId) {
+  const activatedUser = await user.setFeatures(userId, ["create:session"]);
+  return activatedUser;
+}
+
 async function sendEmailToUser(user, activationToken) {
   await email.send({
     from: "SpaceNews <contato@spacenews.com.br>",
@@ -88,6 +118,8 @@ Equipe SpaceNews`,
 const activation = {
   findOneValidById,
   create,
+  markTokenAsUsed,
+  activateUserByUserId,
   sendEmailToUser,
   ACTIVATION_TOKEN_ID_PATTERN,
 };
