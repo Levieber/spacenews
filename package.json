@@ -2,9 +2,15 @@
   "name": "spacenews",
   "version": "1.0.0",
   "description": "An tabnews clone",
+  "type": "module",
+  "devEngines":{
+      "packageManager": {
+        "name": "npm"
+      }
+  },
   "scripts": {
     "predev": "npm run services:up && npm run services:wait:database && npm run migrations:up",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "pretest": "npm run services:up",
@@ -20,10 +26,10 @@
     "lint:deps:check": "knip -t jsconfig.json",
     "lint:deps:write": "knip -t jsconfig.json --fix",
     "lint:secret:check": "secretlint \"**/*\"",
-    "lint:format:check": "prettier --experimental-cli --check .",
-    "lint:format:write": "prettier --experimental-cli --write .",
-    "lint:quality:check": "oxlint --type-aware",
-    "lint:quality:write": "oxlint --type-aware --fix",
+    "lint:format:check": "oxfmt --check .",
+    "lint:format:write": "oxfmt .",
+    "lint:quality:check": "oxlint",
+    "lint:quality:write": "oxlint --fix",
     "prepare": "husky",
     "commit": "cz"
   },
@@ -42,10 +48,10 @@
     "bcryptjs": "3.0.2",
     "cookie": "1.0.2",
     "dotenv-expand": "12.0.3",
-    "next": "15.5.4",
+    "next": "16.0.1",
     "next-connect": "1.0.0",
     "node-pg-migrate": "8.0.3",
-    "nodemailer": "7.0.9",
+    "nodemailer": "7.0.10",
     "pg": "8.16.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
@@ -55,19 +61,18 @@
   "devDependencies": {
     "@commitlint/cli": "20.1.0",
     "@commitlint/config-conventional": "20.0.0",
-    "@faker-js/faker": "10.0.0",
-    "@prettier/plugin-oxc": "0.0.4",
-    "@secretlint/secretlint-rule-preset-recommend": "11.2.4",
+    "@faker-js/faker": "10.1.0",
+    "@secretlint/secretlint-rule-preset-recommend": "11.2.5",
     "commitizen": "4.3.1",
     "concurrently": "9.2.1",
     "cz-conventional-changelog": "3.3.0",
     "husky": "9.1.7",
-    "knip": "5.64.2",
-    "oxlint": "1.20.0",
-    "prettier": "3.6.2",
-    "secretlint": "11.2.4",
-    "set-cookie-parser": "2.7.1",
-    "vitest": "3.2.4"
+    "knip": "5.66.4",
+    "oxfmt": "0.8.0",
+    "oxlint": "1.24.0",
+    "secretlint": "11.2.5",
+    "set-cookie-parser": "2.7.2",
+    "vitest": "4.0.4"
   },
   "config": {
     "commitizen": {
