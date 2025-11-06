@@ -68,6 +68,10 @@ async function createUser(userValues) {
   });
 }
 
+function activateUser(inactiveUser) {
+  return activation.activateUserByUserId(inactiveUser.id);
+}
+
 async function createSession(userId) {
   return await session.create(userId);
 }
@@ -112,6 +116,7 @@ const orchestrator = {
   clearDatabase,
   runPendingMigrations,
   createUser,
+  activateUser,
   createSession,
   deleteAllEmails,
   getLastEmail,

@@ -9,6 +9,7 @@ import {
 } from "@infra/errors.js";
 import session from "@models/session.js";
 import user from "@models/user.js";
+import authorization from "@models/authorization.js";
 
 function onNoMatchHandler(_request, response) {
   const publicError = new MethodNotAllowedError();
@@ -100,9 +101,9 @@ function injectAnonymousUser(request) {
 
 function canRequest(feature) {
   return function middleware(request, response, next) {
-    const currentUser = request.context.user;
+    const requestUser = request.context.user;
 
-    if (currentUser.features.includes(feature)) {
+    if (authorization.can(requestUser, feature)) {
       return next();
     }
 
