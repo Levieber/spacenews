@@ -1,3 +1,4 @@
+import { version as uuidVersion } from "uuid";
 import webServer from "@infra/web-server.js";
 import activation from "@models/activation.js";
 import user from "@models/user.js";
@@ -14,6 +15,7 @@ describe("Use case: Registration Flow (all successful)", () => {
   const expectedEmail = "registration.flow@gmail.com";
   const userPassword = "RegistrationFlowPassword";
   let createUserResponseBody;
+  let createSessionResponseBody;
   let activationToken;
 
   test("Create user account", async () => {
@@ -88,7 +90,7 @@ describe("Use case: Registration Flow (all successful)", () => {
       createUserResponseBody.username,
     );
 
-    expect(activatedUser.features).toEqual(["create:session"]);
+    expect(activatedUser.features).toEqual(["create:session", "read:session"]);
   });
 
   test("Login", async () => {
@@ -108,10 +110,34 @@ describe("Use case: Registration Flow (all successful)", () => {
 
     expect(createSessionResponse.status).toBe(201);
 
-    const createSessionResponseBody = await createSessionResponse.json();
+    createSessionResponseBody = await createSessionResponse.json();
 
     expect(createSessionResponseBody.user_id).toBe(createUserResponseBody.id);
   });
 
-  test("Get user information", async () => {});
+  test("Get user information", async () => {
+    const response = await fetch("http://localhost:3000/api/v1/user", {
+      headers: {
+        Cookie: `session_id=${createSessionResponseBody.token}`,
+      },
+    });
+
+    const responseBody = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(responseBody).toEqual({
+      id: createUserResponseBody.id,
+      username: createUserResponseBody.username,
+      email: createUserResponseBody.email,
+      features: ["create:session", "read:session"],
+      password: createUserResponseBody.password,
+      created_at: createUserResponseBody.created_at,
+      updated_at: responseBody.updated_at,
+    });
+
+    expect(uuidVersion(responseBody.id)).toBe(4);
+    expect(Date.parse(responseBody.created_at)).not.toBeNaN();
+    expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+    expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+  });
 });
