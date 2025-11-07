@@ -1,8 +1,9 @@
-import { NotFoundError } from "@infra/errors.js";
+import { NotFoundError, ForbiddenError } from "@infra/errors.js";
 import database from "@infra/database.js";
 import email from "@infra/email.js";
 import webServer from "@infra/web-server.js";
 import user from "@models/user.js";
+import authorization from "@models/authorization.js";
 
 const ACTIVATION_TOKEN_ID_PATTERN =
   /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
@@ -97,6 +98,15 @@ async function markTokenAsUsed(activationTokenId) {
 }
 
 async function activateUserByUserId(userId) {
+  const userToActivate = await user.findOneById(userId);
+
+  if (!authorization.can(userToActivate, "read:activation_token")) {
+    throw new ForbiddenError({
+      message: "Você não possui permissão para ativar a conta.",
+      action: "Contate o suporte caso você acredite que isto seja um erro.",
+    });
+  }
+
   const activatedUser = await user.setFeatures(userId, [
     "create:session",
     "read:session",
@@ -126,6 +136,7 @@ const activation = {
   activateUserByUserId,
   sendEmailToUser,
   ACTIVATION_TOKEN_ID_PATTERN,
+  EXPIRATION_IN_MILLISECONDS,
 };
 
 export default activation;
