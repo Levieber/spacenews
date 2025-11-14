@@ -135,7 +135,7 @@ describe("POST /api/v1/users", () => {
   describe("Default user", () => {
     test("With unique and valid data, but already logged in user", async () => {
       const createdUser = await orchestrator.createUser();
-      await orchestrator.activateUser(createdUser);
+      await orchestrator.activateUser(createdUser.id);
       const createdSession = await orchestrator.createSession(createdUser.id);
 
       const response = await fetch("http://localhost:3000/api/v1/users", {

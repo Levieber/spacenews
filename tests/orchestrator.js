@@ -68,8 +68,8 @@ async function createUser(userValues) {
   });
 }
 
-function activateUser(inactiveUser) {
-  return activation.activateUserByUserId(inactiveUser.id);
+function activateUser(userId) {
+  return activation.activateUserByUserId(userId);
 }
 
 async function createSession(userId) {

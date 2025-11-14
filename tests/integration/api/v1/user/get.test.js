@@ -106,7 +106,7 @@ describe("GET /api/v1/user", () => {
         username: expectedUsername,
       });
 
-      const activatedUser = await orchestrator.activateUser(createdUser);
+      const activatedUser = await orchestrator.activateUser(createdUser.id);
 
       const createdSession = await orchestrator.createSession(activatedUser.id);
 
@@ -171,7 +171,7 @@ describe("GET /api/v1/user", () => {
         username: expectedUsername,
       });
 
-      const activatedUser = await orchestrator.activateUser(createdUser);
+      const activatedUser = await orchestrator.activateUser(createdUser.id);
 
       const createdSession = await orchestrator.createSession(activatedUser.id);
 
