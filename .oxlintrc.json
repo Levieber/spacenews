@@ -1,23 +1,22 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-	"plugins": [
-		"unicorn",
-		"oxc",
-		"import",
-		"react",
-		"react-perf",
-		"jsx-a11y",
-		"nextjs",
-		"eslint",
-		"promise",
-		"node",
-		"regex",
-		"vitest"
-	],
-	"env": {
-		"builtin": true,
-		"browser": true,
-		"node": true,
-		"vitest": true
-	},
+  "plugins": [
+    "unicorn",
+    "oxc",
+    "import",
+    "react",
+    "react-perf",
+    "jsx-a11y",
+    "nextjs",
+    "eslint",
+    "promise",
+    "node",
+    "vitest"
+  ],
+  "env": {
+    "builtin": true,
+    "browser": true,
+    "node": true,
+    "vitest": true
+  }
 }
