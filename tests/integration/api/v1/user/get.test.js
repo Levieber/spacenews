@@ -123,7 +123,7 @@ describe("GET /api/v1/user", () => {
         id: createdUser.id,
         username: expectedUsername,
         email: createdUser.email,
-        features: ["create:session", "read:session"],
+        features: ["create:session", "read:session", "update:user"],
         password: createdUser.password,
         created_at: createdUser.created_at.toISOString(),
         updated_at: activatedUser.updated_at.toISOString(),
@@ -136,11 +136,11 @@ describe("GET /api/v1/user", () => {
       const cacheControl = response.headers.get("Cache-Control");
 
       expect(cacheControl).toBe(
-        "no-store, no-cache, max-age=0, must-revalidate",
+        "no-store, no-cache, max-age=0, must-revalidate"
       );
 
       const renewedSession = await session.findOneValidByToken(
-        createdSession.token,
+        createdSession.token
       );
 
       expect(renewedSession.created_at).toEqual(createdSession.created_at);
@@ -190,7 +190,7 @@ describe("GET /api/v1/user", () => {
         id: createdUser.id,
         username: expectedUsername,
         email: createdUser.email,
-        features: ["create:session", "read:session"],
+        features: ["create:session", "read:session", "update:user"],
         password: createdUser.password,
         created_at: createdUser.created_at.toISOString(),
         updated_at: activatedUser.updated_at.toISOString(),
@@ -201,7 +201,7 @@ describe("GET /api/v1/user", () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
 
       const renewedSession = await session.findOneValidByToken(
-        createdSession.token,
+        createdSession.token
       );
 
       renewedSession.expires_at.setMilliseconds(0);
@@ -212,8 +212,8 @@ describe("GET /api/v1/user", () => {
       expect(renewedSession.expires_at > createdSession.expires_at).toBe(true);
       expect(renewedSession.expires_at).toEqual(
         new Date(
-          +createdSession.expires_at + session.EXPIRATION_IN_MILLISECONDS / 2,
-        ),
+          +createdSession.expires_at + session.EXPIRATION_IN_MILLISECONDS / 2
+        )
       );
 
       const parsedSetCookie = setCookieParser(response, {

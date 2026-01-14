@@ -33,7 +33,7 @@ describe("Use case: Registration Flow (all successful)", () => {
           email: expectedEmail,
           password: userPassword,
         }),
-      },
+      }
     );
 
     createUserResponseBody = await createUserResponse.json();
@@ -59,13 +59,13 @@ describe("Use case: Registration Flow (all successful)", () => {
     expect(lastEmail.text).toContain("RegistrationFlow");
 
     const activationTokenId = orchestrator.extractActivationTokenId(
-      lastEmail.text,
+      lastEmail.text
     );
 
     activationToken = await activation.findOneValidById(activationTokenId);
 
     expect(lastEmail.text).toContain(
-      `${webServer.origin}/register/activate/${activationToken.id}`,
+      `${webServer.origin}/register/activate/${activationToken.id}`
     );
 
     expect(createUserResponseBody.id).toBe(activationToken.user_id);
@@ -78,7 +78,7 @@ describe("Use case: Registration Flow (all successful)", () => {
       `http://localhost:3000/api/v1/activations/${activationToken.id}`,
       {
         method: "PATCH",
-      },
+      }
     );
 
     const responseBody = await response.json();
@@ -87,10 +87,14 @@ describe("Use case: Registration Flow (all successful)", () => {
     expect(Date.parse(responseBody.used_at)).not.toBeNaN();
 
     const activatedUser = await user.findOneByUsername(
-      createUserResponseBody.username,
+      createUserResponseBody.username
     );
 
-    expect(activatedUser.features).toEqual(["create:session", "read:session"]);
+    expect(activatedUser.features).toEqual([
+      "create:session",
+      "read:session",
+      "update:user",
+    ]);
   });
 
   test("Login", async () => {
@@ -105,7 +109,7 @@ describe("Use case: Registration Flow (all successful)", () => {
           email: expectedEmail,
           password: userPassword,
         }),
-      },
+      }
     );
 
     expect(createSessionResponse.status).toBe(201);
@@ -129,7 +133,7 @@ describe("Use case: Registration Flow (all successful)", () => {
       id: createUserResponseBody.id,
       username: createUserResponseBody.username,
       email: createUserResponseBody.email,
-      features: ["create:session", "read:session"],
+      features: ["create:session", "read:session", "update:user"],
       password: createUserResponseBody.password,
       created_at: createUserResponseBody.created_at,
       updated_at: responseBody.updated_at,

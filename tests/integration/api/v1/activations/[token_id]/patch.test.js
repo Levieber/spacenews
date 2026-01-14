@@ -16,7 +16,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
         "http://localhost:3000/api/v1/activations/38d7b17b-7e41-4f0b-9628-bf153bc87d7a",
         {
           method: "PATCH",
-        },
+        }
       );
 
       const responseBody = await response.json();
@@ -45,7 +45,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
         `http://localhost:3000/api/v1/activations/${expiredActivationToken.id}`,
         {
           method: "PATCH",
-        },
+        }
       );
 
       const responseBody = await response.json();
@@ -68,14 +68,14 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
         `http://localhost:3000/api/v1/activations/${activationToken.id}`,
         {
           method: "PATCH",
-        },
+        }
       );
 
       const secondResponse = await fetch(
         `http://localhost:3000/api/v1/activations/${activationToken.id}`,
         {
           method: "PATCH",
-        },
+        }
       );
 
       const secondResponseBody = await secondResponse.json();
@@ -99,7 +99,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
         `http://localhost:3000/api/v1/activations/${activationToken.id}`,
         {
           method: "PATCH",
-        },
+        }
       );
 
       const responseBody = await response.json();
@@ -129,7 +129,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
       createdAt.setMilliseconds(0);
 
       expect(expiresAt.getTime() - createdAt.getTime()).toBe(
-        activation.EXPIRATION_IN_MILLISECONDS,
+        activation.EXPIRATION_IN_MILLISECONDS
       );
 
       const activatedUser = await user.findOneById(responseBody.user_id);
@@ -137,6 +137,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
       expect(activatedUser.features).toEqual([
         "create:session",
         "read:session",
+        "update:user",
       ]);
     });
 
@@ -151,7 +152,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
         `http://localhost:3000/api/v1/activations/${activationToken.id}`,
         {
           method: "PATCH",
-        },
+        }
       );
 
       const responseBody = await response.json();
@@ -182,7 +183,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
           headers: {
             Cookie: `session_id=${firstUserSession.token}`,
           },
-        },
+        }
       );
 
       const responseBody = await response.json();
