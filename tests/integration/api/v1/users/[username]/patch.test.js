@@ -26,7 +26,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           body: JSON.stringify({
             username: "uniqueUser2",
           }),
-        }
+        },
       );
 
       const responseBody = await response.json();
@@ -54,7 +54,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           headers: {
             Cookie: `session_id=${session.token}`,
           },
-        }
+        },
       );
 
       const responseBody = await response.json();
@@ -86,7 +86,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           body: JSON.stringify({
             username: user1.username,
           }),
-        }
+        },
       );
 
       const errorResponseBody = await errorResponse.json();
@@ -123,7 +123,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           body: JSON.stringify({
             email: user1.email,
           }),
-        }
+        },
       );
 
       const errorResponseBody = await errorResponse.json();
@@ -137,6 +137,39 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
+    test("With `userB` targeting `userA`", async () => {
+      const userA = await orchestrator.createUser({ username: "userA" });
+      const userB = await orchestrator.createUser({ username: "userB" });
+
+      const activatedUser = await orchestrator.activateUser(userB.id);
+      const session = await orchestrator.createSession(activatedUser.id);
+
+      const errorResponse = await fetch(
+        `http://localhost:3000/api/v1/users/${userA.username}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `session_id=${session.token}`,
+          },
+          body: JSON.stringify({
+            username: "userC",
+          }),
+        },
+      );
+
+      const errorResponseBody = await errorResponse.json();
+
+      expect(errorResponse.status).toBe(403);
+      expect(errorResponseBody).toEqual({
+        action:
+          "Verifique se você possui a permissão necessária para atualizar outro usuário",
+        message: "Você não possui permissão para atualizar outro usuário",
+        name: "ForbiddenError",
+        status_code: 403,
+      });
+    });
+
     test("With unique 'username'", async () => {
       const initialUsername = "uniqueUser1";
       const expectedUsername = "uniqueUser2";
@@ -146,7 +179,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
 
       const activatedUser = await orchestrator.activateUser(
-        uniqueUsernameUser.id
+        uniqueUsernameUser.id,
       );
 
       const session = await orchestrator.createSession(activatedUser.id);
@@ -162,7 +195,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           body: JSON.stringify({
             username: expectedUsername,
           }),
-        }
+        },
       );
 
       const responseBody = await response.json();
@@ -208,7 +241,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           body: JSON.stringify({
             email: expectedEmail,
           }),
-        }
+        },
       );
 
       const responseBody = await response.json();
@@ -254,7 +287,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           body: JSON.stringify({
             password: expectedPassword,
           }),
-        }
+        },
       );
 
       const responseBody = await response.json();
@@ -277,17 +310,17 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
 
       const userInDatabase = await user.findOneByUsername(
-        newPasswordUser.username
+        newPasswordUser.username,
       );
 
       const correctPasswordMatch = await password.compare(
         expectedPassword,
-        userInDatabase.password
+        userInDatabase.password,
       );
 
       const incorrectPasswordMatch = await password.compare(
         initialPassword,
-        userInDatabase.password
+        userInDatabase.password,
       );
 
       expect(correctPasswordMatch).toBe(true);
