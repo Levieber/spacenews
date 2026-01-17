@@ -111,6 +111,11 @@ function extractActivationTokenId(text) {
   return activationTokenId;
 }
 
+async function addFeaturesToUser(userId, features) {
+  const updatedUser = await user.addFeatures(userId, features);
+  return updatedUser;
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -121,6 +126,7 @@ const orchestrator = {
   deleteAllEmails,
   getLastEmail,
   extractActivationTokenId,
+  addFeaturesToUser,
 };
 
 export default orchestrator;
