@@ -204,9 +204,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: expectedUsername,
-        email: uniqueUsernameUser.email,
         features: ["create:session", "read:session", "update:user"],
-        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -250,9 +248,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: uniqueEmailUser.username,
-        email: expectedEmail,
         features: ["create:session", "read:session", "update:user"],
-        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -296,9 +292,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: newPasswordUser.username,
-        email: newPasswordUser.email,
         features: ["create:session", "read:session", "update:user"],
-        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -329,59 +323,59 @@ describe("PATCH /api/v1/users/[username]", () => {
   });
 
   describe("Privileged user", () => {
-    test("With `update:user:others` targeting `defaultUser`", async () => {
-      const privilegedUser = await orchestrator.createUser();
+    describe("With `update:user:others`", () => {
+      test("Targeting `defaultUser`", async () => {
+        const privilegedUser = await orchestrator.createUser();
 
-      const activatedPrivilegedUser = await orchestrator.activateUser(
-        privilegedUser.id,
-      );
+        const activatedPrivilegedUser = await orchestrator.activateUser(
+          privilegedUser.id,
+        );
 
-      await orchestrator.addFeaturesToUser(privilegedUser.id, [
-        "update:user:others",
-      ]);
+        await orchestrator.addFeaturesToUser(privilegedUser.id, [
+          "update:user:others",
+        ]);
 
-      const privilegedUserSession = await orchestrator.createSession(
-        activatedPrivilegedUser.id,
-      );
+        const privilegedUserSession = await orchestrator.createSession(
+          activatedPrivilegedUser.id,
+        );
 
-      const defaultUser = await orchestrator.createUser();
+        const defaultUser = await orchestrator.createUser();
 
-      const expectedUsername = "AlteradoPorPrivilegiado";
+        const expectedUsername = "AlteradoPorPrivilegiado";
 
-      const response = await fetch(
-        `http://localhost:3000/api/v1/users/${defaultUser.username}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: `session_id=${privilegedUserSession.token}`,
+        const response = await fetch(
+          `http://localhost:3000/api/v1/users/${defaultUser.username}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Cookie: `session_id=${privilegedUserSession.token}`,
+            },
+            body: JSON.stringify({
+              username: expectedUsername,
+            }),
           },
-          body: JSON.stringify({
-            username: expectedUsername,
-          }),
-        },
-      );
+        );
 
-      const responseBody = await response.json();
+        const responseBody = await response.json();
 
-      const createdAt = defaultUser.created_at.toISOString();
+        const createdAt = defaultUser.created_at.toISOString();
 
-      expect(response.status).toBe(200);
-      expect(responseBody).toEqual({
-        id: defaultUser.id,
-        username: expectedUsername,
-        email: defaultUser.email,
-        features: defaultUser.features,
-        password: responseBody.password,
-        created_at: createdAt,
-        updated_at: responseBody.updated_at,
+        expect(response.status).toBe(200);
+        expect(responseBody).toEqual({
+          id: defaultUser.id,
+          username: expectedUsername,
+          features: defaultUser.features,
+          created_at: createdAt,
+          updated_at: responseBody.updated_at,
+        });
+
+        expect(uuidVersion(responseBody.id)).toBe(4);
+        expect(Date.parse(responseBody.created_at)).not.toBeNaN();
+        expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+
+        expect(responseBody.updated_at > createdAt).toBe(true);
       });
-
-      expect(uuidVersion(responseBody.id)).toBe(4);
-      expect(Date.parse(responseBody.created_at)).not.toBeNaN();
-      expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
-
-      expect(responseBody.updated_at > createdAt).toBe(true);
     });
   });
 });
