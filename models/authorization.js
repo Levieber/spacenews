@@ -144,9 +144,9 @@ function validateFeature(feature) {
 
 function validateResource(resource) {
   if (!resource) {
-    throw new InternalServerError(
-      "É necessário fornecer `resource` no model `authorization`.",
-    );
+    throw new InternalServerError({
+      cause: "É necessário fornecer `resource` no model `authorization`.",
+    });
   }
 }
 

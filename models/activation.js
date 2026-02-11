@@ -10,11 +10,11 @@ const ACTIVATION_TOKEN_ID_PATTERN =
 
 const EXPIRATION_IN_MILLISECONDS = 60 * 15 * 1000; // 15 minutes
 
-async function findOneValidById(userId) {
-  const savedToken = await runSelectQuery(userId);
+async function findOneValidById(activationTokenId) {
+  const savedToken = await runSelectQuery(activationTokenId);
   return savedToken;
 
-  async function runSelectQuery(userId) {
+  async function runSelectQuery(activationTokenId) {
     const result = await database.query({
       text: `
         SELECT
@@ -30,7 +30,7 @@ async function findOneValidById(userId) {
         LIMIT
           1
       ;`,
-      values: [userId],
+      values: [activationTokenId],
     });
 
     if (result.rowCount === 0) {

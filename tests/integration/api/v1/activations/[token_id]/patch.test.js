@@ -144,7 +144,7 @@ describe("PATCH /api/v1/activations/[token_id]", () => {
     test("With valid token but already activated user", async () => {
       const createdUser = await orchestrator.createUser();
 
-      orchestrator.activateUser(createdUser.id);
+      await orchestrator.activateUser(createdUser.id);
 
       const activationToken = await activation.create(createdUser.id);
 

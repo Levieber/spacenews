@@ -104,11 +104,13 @@ async function getLastEmail() {
 }
 
 function extractActivationTokenId(text) {
-  const [activationTokenId] = text.match(
-    activation.ACTIVATION_TOKEN_ID_PATTERN,
-  );
+  const match = text.match(activation.ACTIVATION_TOKEN_ID_PATTERN);
 
-  return activationTokenId;
+  if (!match) {
+    throw new Error("Activation token id not found in text.");
+  }
+
+  return match[0];
 }
 
 async function addFeaturesToUser(userId, features) {
