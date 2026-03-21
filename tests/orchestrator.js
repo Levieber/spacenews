@@ -4,6 +4,7 @@ import database from "@infra/database.js";
 import migrator from "@models/migrator.js";
 import user from "@models/user.js";
 import session from "@models/session.js";
+import activation from "@models/activation.js";
 
 async function waitForAllServices() {
   await waitForWebServer();
@@ -67,6 +68,10 @@ async function createUser(userValues) {
   });
 }
 
+function activateUser(userId) {
+  return activation.activateUserByUserId(userId);
+}
+
 async function createSession(userId) {
   return await session.create(userId);
 }
@@ -84,6 +89,8 @@ async function getLastEmail() {
 
   const lastEmail = emailBody.at(-1);
 
+  if (!lastEmail) return null;
+
   const emailTextResponse = await fetch(
     `${process.env.EMAIL_HTTP_URL}/messages/${lastEmail.id}.plain`,
   );
@@ -96,14 +103,32 @@ async function getLastEmail() {
   };
 }
 
+function extractActivationTokenId(text) {
+  const match = text.match(activation.ACTIVATION_TOKEN_ID_PATTERN);
+
+  if (!match) {
+    throw new Error("Activation token id not found in text.");
+  }
+
+  return match[0];
+}
+
+async function addFeaturesToUser(userId, features) {
+  const updatedUser = await user.addFeatures(userId, features);
+  return updatedUser;
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
   runPendingMigrations,
   createUser,
+  activateUser,
   createSession,
   deleteAllEmails,
   getLastEmail,
+  extractActivationTokenId,
+  addFeaturesToUser,
 };
 
 export default orchestrator;

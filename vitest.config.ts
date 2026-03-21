@@ -46,6 +46,7 @@ function toRunApiTests(
     `${baseUrl}/get.test.js`,
     `${baseUrl}/post.test.js`,
     `${baseUrl}/put.test.js`,
+    `${baseUrl}/patch.test.js`,
     `${baseUrl}/delete.test.js`,
   ];
 }
