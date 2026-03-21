@@ -118,7 +118,7 @@ async function activateUserByUserId(userId) {
 
 async function sendEmailToUser(user, activationToken) {
   await email.send({
-    from: "SpaceNews <contato@spacenews.com.br>",
+    from: "SpaceNews <contato@spacenews.levieber.com.br>",
     to: user.email,
     subject: "Ative seu cadastro no SpaceNews!",
     text: `${user.username}, clique no link abaixo para ativar seu cadastro no SpaceNews:
