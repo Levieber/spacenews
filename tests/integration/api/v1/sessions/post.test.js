@@ -148,9 +148,10 @@ describe("POST /api/v1/sessions", () => {
 
       expect(parsedSetCookie.session_id).toEqual({
         name: "session_id",
-        value: responseBody.token,
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
+        value: responseBody.token,
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
       });
     });

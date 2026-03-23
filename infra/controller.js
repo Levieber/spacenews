@@ -45,6 +45,7 @@ function setSessionCookie(response, sessionId) {
   const setCookie = cookie.serialize("session_id", sessionId, {
     path: "/",
     httpOnly: true,
+    sameSite: "lax",
     maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
     secure: process.env.NODE_ENV === "production",
   });
