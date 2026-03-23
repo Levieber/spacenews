@@ -6,8 +6,8 @@
     "paths": {
       "@models/*": ["./models/*"],
       "@infra/*": ["./infra/*"],
-      "@tests/*": ["./tests/*"],
+      "@tests/*": ["./tests/*"]
     },
-    "types": ["vitest/globals"],
-  },
+    "types": ["vitest/globals"]
+  }
 }

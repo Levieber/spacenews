@@ -2,6 +2,7 @@ import { version as uuidVersion } from "uuid";
 import orchestrator from "@tests/orchestrator.js";
 import user from "@models/user.js";
 import password from "@models/password.js";
+import webServer from "@infra/web-server.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -11,13 +12,13 @@ beforeAll(async () => {
 
 describe("PATCH /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
-    test("With unique 'username'", async () => {
+    test("With unique `username`", async () => {
       const uniqueUsernameUser = await orchestrator.createUser({
         username: "uniqueAnonymousUser",
       });
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${uniqueUsernameUser.username}`,
+        `${webServer.origin}/api/v1/users/${uniqueUsernameUser.username}`,
         {
           method: "PATCH",
           headers: {
@@ -42,13 +43,13 @@ describe("PATCH /api/v1/users/[username]", () => {
   });
 
   describe("Default user", () => {
-    test("With nonexistent 'username'", async () => {
+    test("With nonexistent `username`", async () => {
       const createdUser = await orchestrator.createUser();
       const activatedUser = await orchestrator.activateUser(createdUser.id);
       const session = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/UsuarioInexistente",
+        `${webServer.origin}/api/v1/users/UsuarioInexistente`,
         {
           method: "PATCH",
           headers: {
@@ -68,7 +69,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'username'", async () => {
+    test("With duplicated `username`", async () => {
       const user1 = await orchestrator.createUser({ username: "user1" });
       const user2 = await orchestrator.createUser({ username: "user2" });
 
@@ -76,7 +77,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const session = await orchestrator.createSession(activatedUser.id);
 
       const errorResponse = await fetch(
-        `http://localhost:3000/api/v1/users/${user2.username}`,
+        `${webServer.origin}/api/v1/users/${user2.username}`,
         {
           method: "PATCH",
           headers: {
@@ -100,7 +101,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'email'", async () => {
+    test("With duplicated `email`", async () => {
       const user1 = await orchestrator.createUser({
         email: "email1@gmail.com",
       });
@@ -113,7 +114,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const session = await orchestrator.createSession(activatedUser.id);
 
       const errorResponse = await fetch(
-        `http://localhost:3000/api/v1/users/${user2.username}`,
+        `${webServer.origin}/api/v1/users/${user2.username}`,
         {
           method: "PATCH",
           headers: {
@@ -145,7 +146,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const session = await orchestrator.createSession(activatedUser.id);
 
       const errorResponse = await fetch(
-        `http://localhost:3000/api/v1/users/${userA.username}`,
+        `${webServer.origin}/api/v1/users/${userA.username}`,
         {
           method: "PATCH",
           headers: {
@@ -170,7 +171,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With unique 'username'", async () => {
+    test("With unique `username`", async () => {
       const initialUsername = "uniqueUser1";
       const expectedUsername = "uniqueUser2";
 
@@ -185,7 +186,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const session = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${uniqueUsernameUser.username}`,
+        `${webServer.origin}/api/v1/users/${uniqueUsernameUser.username}`,
         {
           method: "PATCH",
           headers: {
@@ -216,7 +217,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
     });
 
-    test("With unique 'email'", async () => {
+    test("With unique `email`", async () => {
       const initialEmail = "uniqueUser1";
       const expectedEmail = "uniqueEmail2@gmail.com";
 
@@ -229,7 +230,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const session = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${uniqueEmailUser.username}`,
+        `${webServer.origin}/api/v1/users/${uniqueEmailUser.username}`,
         {
           method: "PATCH",
           headers: {
@@ -258,9 +259,15 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
 
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+
+      const userInDatabase = await user.findOneByUsername(
+        activatedUser.username,
+      );
+
+      expect(userInDatabase.email).toBe(expectedEmail);
     });
 
-    test("With new 'password'", async () => {
+    test("With new `password`", async () => {
       const initialPassword = "newPassword1";
       const expectedPassword = "newPassword2";
 
@@ -273,7 +280,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const session = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${newPasswordUser.username}`,
+        `${webServer.origin}/api/v1/users/${newPasswordUser.username}`,
         {
           method: "PATCH",
           headers: {
@@ -344,7 +351,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         const expectedUsername = "AlteradoPorPrivilegiado";
 
         const response = await fetch(
-          `http://localhost:3000/api/v1/users/${defaultUser.username}`,
+          `${webServer.origin}/api/v1/users/${defaultUser.username}`,
           {
             method: "PATCH",
             headers: {

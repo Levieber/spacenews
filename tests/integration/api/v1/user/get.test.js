@@ -2,6 +2,7 @@ import { version as uuidVersion } from "uuid";
 import setCookieParser from "set-cookie-parser";
 import orchestrator from "@tests/orchestrator.js";
 import session from "@models/session.js";
+import webServer from "@infra/web-server.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -12,7 +13,7 @@ beforeAll(async () => {
 describe("GET /api/v1/user", () => {
   describe("Anonymous user", () => {
     test("Retrieving the endpoint", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/user");
+      const response = await fetch(`${webServer.origin}/api/v1/user`);
 
       const responseBody = await response.json();
 
@@ -29,7 +30,7 @@ describe("GET /api/v1/user", () => {
       const nonexistentToken =
         "f9f35d250d33ba744f5a42864cdefa17d630ac394d585a4f6de25d5c8aefa64c";
 
-      const response = await fetch("http://localhost:3000/api/v1/user", {
+      const response = await fetch(`${webServer.origin}/api/v1/user`, {
         headers: {
           Cookie: `session_id=${nonexistentToken}`,
         },
@@ -68,7 +69,7 @@ describe("GET /api/v1/user", () => {
 
       vi.useRealTimers();
 
-      const response = await fetch("http://localhost:3000/api/v1/user", {
+      const response = await fetch(`${webServer.origin}/api/v1/user`, {
         headers: {
           Cookie: `session_id=${createdSession.token}`,
         },
@@ -110,7 +111,7 @@ describe("GET /api/v1/user", () => {
 
       const createdSession = await orchestrator.createSession(activatedUser.id);
 
-      const response = await fetch("http://localhost:3000/api/v1/user", {
+      const response = await fetch(`${webServer.origin}/api/v1/user`, {
         headers: {
           Cookie: `session_id=${createdSession.token}`,
         },
@@ -152,9 +153,10 @@ describe("GET /api/v1/user", () => {
 
       expect(parsedSetCookie.session_id).toEqual({
         name: "session_id",
-        value: renewedSession.token,
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
+        value: renewedSession.token,
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
       });
     });
@@ -176,7 +178,7 @@ describe("GET /api/v1/user", () => {
 
       vi.useRealTimers();
 
-      const response = await fetch("http://localhost:3000/api/v1/user", {
+      const response = await fetch(`${webServer.origin}/api/v1/user`, {
         headers: {
           Cookie: `session_id=${createdSession.token}`,
         },
@@ -220,9 +222,10 @@ describe("GET /api/v1/user", () => {
 
       expect(parsedSetCookie.session_id).toEqual({
         name: "session_id",
-        value: renewedSession.token,
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
+        value: renewedSession.token,
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000,
       });
     });
