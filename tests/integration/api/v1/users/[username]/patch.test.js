@@ -11,7 +11,7 @@ beforeAll(async () => {
 
 describe("PATCH /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
-    test("With unique 'username'", async () => {
+    test("With unique `username`", async () => {
       const uniqueUsernameUser = await orchestrator.createUser({
         username: "uniqueAnonymousUser",
       });
@@ -42,7 +42,7 @@ describe("PATCH /api/v1/users/[username]", () => {
   });
 
   describe("Default user", () => {
-    test("With nonexistent 'username'", async () => {
+    test("With nonexistent `username`", async () => {
       const createdUser = await orchestrator.createUser();
       const activatedUser = await orchestrator.activateUser(createdUser.id);
       const session = await orchestrator.createSession(activatedUser.id);
@@ -68,7 +68,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'username'", async () => {
+    test("With duplicated `username`", async () => {
       const user1 = await orchestrator.createUser({ username: "user1" });
       const user2 = await orchestrator.createUser({ username: "user2" });
 
@@ -100,7 +100,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'email'", async () => {
+    test("With duplicated `email`", async () => {
       const user1 = await orchestrator.createUser({
         email: "email1@gmail.com",
       });
@@ -170,7 +170,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With unique 'username'", async () => {
+    test("With unique `username`", async () => {
       const initialUsername = "uniqueUser1";
       const expectedUsername = "uniqueUser2";
 
@@ -216,7 +216,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
     });
 
-    test("With unique 'email'", async () => {
+    test("With unique `email`", async () => {
       const initialEmail = "uniqueUser1";
       const expectedEmail = "uniqueEmail2@gmail.com";
 
@@ -260,7 +260,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
     });
 
-    test("With new 'password'", async () => {
+    test("With new `password`", async () => {
       const initialPassword = "newPassword1";
       const expectedPassword = "newPassword2";
 
