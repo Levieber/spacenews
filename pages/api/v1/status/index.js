@@ -41,5 +41,5 @@ async function getHandler(request, response) {
     systemStatus,
   );
 
-  response.status(200).json(outputValues);
+  return response.status(200).json(outputValues);
 }

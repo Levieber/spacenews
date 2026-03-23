@@ -38,7 +38,7 @@ function onErrorHandler(error, _request, response) {
 
   console.error(publicError);
 
-  response.status(publicError.statusCode).json(publicError);
+  return response.status(publicError.statusCode).json(publicError);
 }
 
 function setSessionCookie(response, sessionId) {
