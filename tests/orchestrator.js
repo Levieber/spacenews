@@ -5,6 +5,7 @@ import migrator from "@models/migrator.js";
 import user from "@models/user.js";
 import session from "@models/session.js";
 import activation from "@models/activation.js";
+import webServer from "@infra/web-server.js";
 
 async function waitForAllServices() {
   await waitForWebServer();
@@ -18,7 +19,7 @@ async function waitForAllServices() {
     });
 
     async function fetchStatusPage() {
-      const response = await fetch("http://localhost:3000/api/v1/status");
+      const response = await fetch(`${webServer.origin}/api/v1/status`);
 
       if (response.status !== 200) {
         throw new Error();

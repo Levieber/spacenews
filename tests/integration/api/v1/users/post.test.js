@@ -2,6 +2,7 @@ import { version as uuidVersion } from "uuid";
 import orchestrator from "@tests/orchestrator.js";
 import user from "@models/user.js";
 import password from "@models/password.js";
+import webServer from "@infra/web-server.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -12,7 +13,7 @@ beforeAll(async () => {
 describe("POST /api/v1/users", () => {
   describe("Anonymous user", () => {
     test("With unique and valid data", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/users", {
+      const response = await fetch(`${webServer.origin}/api/v1/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +57,7 @@ describe("POST /api/v1/users", () => {
     });
 
     test("With duplicated `email`", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/users", {
+      const response = await fetch(`${webServer.origin}/api/v1/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +69,7 @@ describe("POST /api/v1/users", () => {
         }),
       });
 
-      const errorResponse = await fetch("http://localhost:3000/api/v1/users", {
+      const errorResponse = await fetch(`${webServer.origin}/api/v1/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,7 +94,7 @@ describe("POST /api/v1/users", () => {
     });
 
     test("With duplicated `username`", async () => {
-      const response = await fetch("http://localhost:3000/api/v1/users", {
+      const response = await fetch(`${webServer.origin}/api/v1/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,7 +106,7 @@ describe("POST /api/v1/users", () => {
         }),
       });
 
-      const errorResponse = await fetch("http://localhost:3000/api/v1/users", {
+      const errorResponse = await fetch(`${webServer.origin}/api/v1/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +137,7 @@ describe("POST /api/v1/users", () => {
       await orchestrator.activateUser(createdUser.id);
       const createdSession = await orchestrator.createSession(createdUser.id);
 
-      const response = await fetch("http://localhost:3000/api/v1/users", {
+      const response = await fetch(`${webServer.origin}/api/v1/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
