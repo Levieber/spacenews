@@ -1,1 +1,1 @@
-npm run lint:secret:check
+pnpm run lint:secret:check
