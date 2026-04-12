@@ -9,39 +9,48 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
       - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
 
-      - run: npm ci
+      - run: pnpm install
 
-      - run: npm run lint:format:check
+      - run: pnpm run lint:format:check
   deps:
     name: Dependencies
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
       - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
 
-      - run: npm ci
+      - run: pnpm install
 
-      - run: npm run lint:deps:check
+      - run: pnpm run lint:deps:check
   quality:
     name: Code Quality
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
       - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
 
-      - run: npm ci
+      - run: pnpm install
 
-      - run: npm run lint:quality:check
+      - run: pnpm run lint:quality:check
   commit:
     name: Commit
     runs-on: ubuntu-latest
@@ -50,10 +59,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
       - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
 
-      - run: npm ci
+      - run: pnpm install
 
-      - run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+      - run: pnpm commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
