@@ -3,6 +3,7 @@
  */
 const nextConfig = {
   typedRoutes: true,
+  transpilePackages: ["@primer/react"],
 };
 
 export default nextConfig;
