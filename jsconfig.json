@@ -3,6 +3,7 @@
     "paths": {
       "@models/*": ["./models/*"],
       "@infra/*": ["./infra/*"],
+      "@interface/*": ["./interface/*"],
       "@tests/*": ["./tests/*"]
     },
     "types": ["vitest/globals"]
