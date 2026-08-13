@@ -1,7 +1,21 @@
 import Head from "next/head";
+import styles from "./index.module.css";
 import { PageLayout, Header, Text } from "@primer/react";
 
-export default function DefaultLayout({ children, metadata = {} }) {
+const contentWidthClasses = {
+  small: styles.smallContent,
+};
+
+export default function DefaultLayout({
+  children,
+  contentWidth,
+  metadata = {},
+}) {
+  const contentWidthClassName = contentWidthClasses[contentWidth];
+  const contentWidthProp = contentWidthClassName
+    ? { className: contentWidthClassName }
+    : { width: contentWidth };
+
   return (
     <>
       <Head>
@@ -29,7 +43,9 @@ export default function DefaultLayout({ children, metadata = {} }) {
         </Header.Item>
       </Header>
       <PageLayout>
-        <PageLayout.Content>{children}</PageLayout.Content>
+        <PageLayout.Content {...contentWidthProp}>
+          {children}
+        </PageLayout.Content>
         <PageLayout.Footer divider="line">
           <Text size="small">&copy; {new Date().getFullYear()} SpaceNews</Text>
         </PageLayout.Footer>
